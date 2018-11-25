@@ -10,11 +10,13 @@ import {applyMiddleware, combineReducers, createStore} from "redux";
 import thunk from "redux-thunk";
 //SCREEN
 import SplashScreen from '../Screen/Splash/screen-splash'
+import HomeScreen from '../Screen/Home/screen-home'
 const AppNavigator = createStackNavigator({
-    Splash: {screen: SplashScreen}
+    Splash: {screen: SplashScreen},
+    Home:{screen: HomeScreen}
 }, {
     headerMode: 'none',
-    initialRouteName: 'Splash'
+    initialRouteName: 'Home'
 });
 
 export const navReducer = createNavigationReducer(AppNavigator);
