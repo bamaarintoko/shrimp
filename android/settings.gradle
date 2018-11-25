@@ -1,0 +1,3 @@
+rootProject.name = 'Shrimp'
+
+include ':app'
