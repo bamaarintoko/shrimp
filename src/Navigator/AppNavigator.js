@@ -11,6 +11,7 @@ import thunk from "redux-thunk";
 //SCREEN
 import SplashScreen from '../Screen/Splash/screen-splash'
 import HomeScreen from '../Screen/Home/screen-home'
+import {redShrimp} from "../Reducers/shrimpReducers";
 const AppNavigator = createStackNavigator({
     Splash: {screen: SplashScreen},
     Home:{screen: HomeScreen}
@@ -21,7 +22,8 @@ const AppNavigator = createStackNavigator({
 
 export const navReducer = createNavigationReducer(AppNavigator);
 const appReducer = combineReducers({
-    nav: navReducer
+    nav: navReducer,
+    redShrimp : redShrimp
 });
 export const middleware = createReactNavigationReduxMiddleware(
     "root",
