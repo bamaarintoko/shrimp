@@ -29,20 +29,20 @@ export const Footer = () => {
     return (
         <View style={style.footer}>
             <View style={style.footerLeft}>
-                    <View style={{ alignItems: 'center'}}>
-                        <Image
-                            style={{flex: 1}}
-                            width={hp('3%')}
-                            source={require('../Assets/filter-results-button.png')}
-                            resizeMode={"contain"}
-                        />
-                    </View>
-                    <View style={{margin: 10}}>
-                        <Text style={style.textFooter}>Filter Lokasi</Text>
-                    </View>
+                <View style={{alignItems: 'center'}}>
+                    <Image
+                        style={{flex: 1}}
+                        width={hp('3%')}
+                        source={require('../Assets/filter-results-button.png')}
+                        resizeMode={"contain"}
+                    />
+                </View>
+                <View style={{margin: 10}}>
+                    <Text style={style.textFooter}>Filter Lokasi</Text>
+                </View>
             </View>
             <View style={style.footerRight}>
-                <View style={{ alignItems: 'center'}}>
+                <View style={{alignItems: 'center'}}>
                     <Image
                         style={{flex: 1}}
                         width={hp('3%')}
@@ -58,14 +58,14 @@ export const Footer = () => {
     )
 }
 
-export const CardView = ()=>{
+export const CardView = ({price, location, date, createby}) => {
     return (
         <View style={style.card}>
-            <View style={{flexDirection:'row', flex:1}}>
-                <View style={{flex:6}}>
-                <Text style={style.cardTextHarga}>Rp 66,000</Text>
+            <View style={{flexDirection: 'row', flex: 1}}>
+                <View style={{flex: 6}}>
+                    <Text style={style.cardTextHarga}>Rp {price === undefined ? '00,000' : price}</Text>
                 </View>
-                <View style={{flex:1}}>
+                <View style={{flex: 1}}>
                     <Image
                         style={{flex: 1}}
                         width={hp('4%')}
@@ -74,23 +74,24 @@ export const CardView = ()=>{
                     />
                 </View>
             </View>
-            <View style={{flex:1, paddingTop: 10}}>
-                <Text style={style.cardTextCity}>Kab Purworejo, Jawa Tengah</Text>
+            <View style={{flex: 1, paddingTop: 10}}>
+                <Text style={style.cardTextCity}>{location === undefined ? 'location' : location}</Text>
 
             </View>
-            <View style={{flexDirection:'row', flex:1, marginTop: 10}}>
-                <View style={{flex:2}}>
-                    <Text>Harga</Text>
+            <View style={{flexDirection: 'row', flex: 1, marginTop: 10}}>
+                <View style={{flex: 2}}>
+                    <Text
+                        style={{fontSize: hp('1.8%')}}>{date === undefined ? 'date' : date} oleh {createby === undefined ? 'xxx' : createby}</Text>
                 </View>
-                <View style={{flex:1}}>
-                    <Text>Share</Text>
+                <View style={{flex: 1}}>
+                    <Text style={{fontSize:hp('1.8%')}}>Harga lengkap ></Text>
                 </View>
             </View>
         </View>
     )
 }
-export const Divider = ({title}) =>{
-    return(
+export const Divider = ({title}) => {
+    return (
         <View style={style.divider}>
             <Text style={style.titleDivider}>{title === undefined ? 'Title' : title}</Text>
         </View>
@@ -132,46 +133,44 @@ const style = StyleSheet.create({
         flex: 1,
         backgroundColor: '#0D47A1',
         alignItems: 'center',
-        justifyContent:'center',
+        justifyContent: 'center',
         flexDirection: 'row'
     },
     footerRight: {
         flex: 1,
         backgroundColor: '#1976D2',
         alignItems: 'center',
-        justifyContent:'center',
+        justifyContent: 'center',
         flexDirection: 'row'
     },
-    textFooter:{
-        color:'#FFF',
-        fontSize:hp('2.7%'),
+    textFooter: {
+        color: '#FFF',
+        fontSize: hp('2.7%'),
         fontWeight: 'bold'
     },
     divider: {
-        height:hp('6%'),
-        backgroundColor:'#E0E0E0',
-        justifyContent:'center',
+        height: hp('6%'),
+        backgroundColor: '#E0E0E0',
+        justifyContent: 'center',
         padding: 10
     },
-    titleDivider:{
-        fontSize:hp('2%'),
+    titleDivider: {
+        fontSize: hp('2%'),
         color: '#757575'
     },
-    card:{
-        height:hp('17%'),
+    card: {
+        height: hp('17%'),
         padding: 10,
         borderBottomColor: '#BDBDBD',
         borderBottomWidth: 1,
-        borderTopColor:'#BDBDBD',
-        borderTopWidth: 0.5,
-        flexDirection:'column'
+        flexDirection: 'column'
     },
-    cardTextHarga:{
-        fontSize : hp('3%'),
-        fontWeight:'bold'
+    cardTextHarga: {
+        fontSize: hp('2.5%'),
+        fontWeight: 'bold'
     },
-    cardTextCity:{
-        fontSize:hp('2%'),
-        color:'#1976D2',
+    cardTextCity: {
+        fontSize: hp('1.8%'),
+        color: '#1976D2',
     }
 })

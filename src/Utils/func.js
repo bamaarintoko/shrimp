@@ -3,7 +3,7 @@ import React from 'react';
 import { PixelRatio,Dimensions} from 'react-native';
 const {width, height} = Dimensions.get('window');
 let pixelRatio = PixelRatio.get();
-import md5 from 'crypto-js/md5';
+// import md5 from 'crypto-js/md5';
 export const normalize = (size) => {
     switch (true){
         case (pixelRatio < 1.4):
@@ -98,4 +98,9 @@ export function sqlToJsDate(sqlDateStr) {
     // sqlDateStr = sqlDateStr.replace(/:| /g, "-");
     return new Date(Date.parse(sqlDateStr.replace('-', '/', 'g'))).toISOString()
     // return sqlDate.toISOString().substring(0, 19).replace('T', ' ');
+}
+
+export function number(val) {
+    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+
 }
