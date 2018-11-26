@@ -1,11 +1,12 @@
 import timestampNow from 'performance-now'
 import React from 'react';
-import { PixelRatio,Dimensions} from 'react-native';
+import {PixelRatio, Dimensions} from 'react-native';
+
 const {width, height} = Dimensions.get('window');
 let pixelRatio = PixelRatio.get();
 // import md5 from 'crypto-js/md5';
 export const normalize = (size) => {
-    switch (true){
+    switch (true) {
         case (pixelRatio < 1.4):
             return size * 0.8;
         case (pixelRatio < 2.4):
@@ -18,18 +19,20 @@ export const normalize = (size) => {
 }
 
 export const normalizeFont = (size) => {
-    if (pixelRatio < 1.4){
-        return Math.sqrt((height*height)+(width*width))*(size/175);
+    if (pixelRatio < 1.4) {
+        return Math.sqrt((height * height) + (width * width)) * (size / 175);
     }
-    return Math.sqrt((height*height)+(width*width))*(size/100);
+    return Math.sqrt((height * height) + (width * width)) * (size / 100);
 }
+
 export function throttle() {
     return false
 }
 
-export function secure(key){
+export function secure(key) {
     return md5(md5(key).toString()).toString()
 }
+
 export function jsDateToSqlDT(value) {
     let tomorrow = value
     if (tomorrow === null || tomorrow === "") {
@@ -46,6 +49,7 @@ export function jsDateToSqlDT(value) {
 
     return tomorrow.toISOString().substring(0, 19).replace('T', ' ');
 }
+
 export function jsDateToSqlDTPlusOne(value) {
     let tomorrow = value
     if (tomorrow === null || tomorrow === "") {
@@ -79,6 +83,7 @@ export function jsDateToSqlD(value) {
 
     return tomorrow.toISOString().substring(0, 10);
 }
+
 export function sqlToJsISO(sqlDateStr) {
     if (sqlDateStr === null || sqlDateStr === "") {
         sqlDateStr = '2018-02-22 00:00:00'
@@ -91,6 +96,7 @@ export function sqlToJsISO(sqlDateStr) {
     //console.log(formatedDate.toISOString())
     return formatedDate.toISOString();
 }
+
 export function sqlToJsDate(sqlDateStr) {
     if (sqlDateStr === '') {
         sqlDateStr = '2018-02-22 00:00:00'
@@ -101,6 +107,9 @@ export function sqlToJsDate(sqlDateStr) {
 }
 
 export function number(val) {
-    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    if (val===null){
+        val = undefined
+    }
+    return val === undefined ? '0' : val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 }

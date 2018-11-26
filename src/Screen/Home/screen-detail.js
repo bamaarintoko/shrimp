@@ -17,8 +17,9 @@ class ScreenDetail extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            data : [],
-            initialDetailShrimp : true
+            data: [],
+            initialDetailShrimp: true,
+            loc: ''
         }
     }
 
@@ -34,27 +35,30 @@ class ScreenDetail extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevState.initialDetailShrimp === this.props.redDetailShrimp.status){
+        if (prevState.initialDetailShrimp === this.props.redDetailShrimp.status) {
             this.setState({
-                data : this.props.redDetailShrimp.data
+                data: this.props.redDetailShrimp.data,
+                loc: this.props.redDetailShrimp.data.date_region_full_name
             })
             this.props.dispatch({
-                type :'GET_DETAIL_SHRIMP_RESET'
+                type: 'GET_DETAIL_SHRIMP_RESET'
             })
         }
-        console.log(this.props.redDetailShrimp)
+        // console.log(this.props.redDetailShrimp)
     }
 
 
     render() {
+        // let loc = this.state.data.date_region_full_name.split('-')
+        // console.log(this.state.loc.split('-')[3].replace(" ",""))
         return (
             <Container>
                 <Header/>
                 <Content>
                     <View style={styles.vwDivider}/>
-                    <View style={{height: hp('12%'), padding: 15}}>
-                        <Text>Species</Text>
-                        <Text style={{fontSize:hp('1.9%')}}>{this.state.data.date_region_full_name}</Text>
+                    <View style={{height: hp('10%'), justifyContent:'center',paddingLeft:15}}>
+                        <Text style={{fontSize: hp('2%')}}>Species</Text>
+                        <Text style={{fontSize: hp('1.9%'), color:'#1976D2'}}>{this.state.loc.split('-')[3].replace(" ","")}</Text>
                     </View>
                     <View style={styles.vwDivider}/>
                     <View style={styles.listPrice}>
@@ -151,8 +155,8 @@ const styles = StyleSheet.create({
     },
     vwTitleGrafik: {
         height: hp('6%'),
-        paddingLeft:15,
-        justifyContent:'center'
+        paddingLeft: 15,
+        justifyContent: 'center'
     }
 })
 export default connect(
