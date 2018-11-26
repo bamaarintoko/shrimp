@@ -1,14 +1,19 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Container, Content, Text, View} from 'native-base'
+import {Container, Content, Item, Text, View, Input} from 'native-base'
+import {Image, StyleSheet, TouchableOpacity, ScrollView, TouchableHighlight} from 'react-native'
+import Modal from "react-native-modal";
 import {CardView, Divider, Footer, Header} from "../../Components/my-components";
-import {actGetShrimp} from "./action";
+import {actGetRegions, actGetShrimp} from "./action";
+import {heightPercentageToDP as hp} from "react-native-responsive-screen";
 import {number} from "../../Utils/func";
+import Api from "../../Utils/Api";
 
 
 function mapStateToProps(state) {
     return {
-        redShrimp: state.redShrimp
+        redShrimp: state.redShrimp,
+        redRegions: state.redRegions
     };
 }
 
@@ -18,8 +23,14 @@ class ScreenHome extends Component {
         this.state = {
             data: [],
             initialRedShrimp: true,
-            isLoading: true
+            initialRedRegions: true,
+            isLoading: true,
+            isFilterVisible: false,
+            data_regions: []
         }
+        this.showModalFilter = this.showModalFilter.bind(this)
+        this.onFilterChange = this.onFilterChange.bind(this)
+        this.onFilter = this.onFilter.bind(this)
     }
 
 
@@ -33,17 +44,59 @@ class ScreenHome extends Component {
                 type: 'GET_SHRIMP_RESET'
             })
         }
-        // console.log(this.props.redShrimp)
+
+        if (prevState.initialRedRegions === this.props.redRegions.status) {
+            this.setState({
+                data_regions: this.props.redRegions.data
+            })
+            this.props.dispatch({
+                type: 'GET_REGIONS_RESET'
+            })
+        }
+        console.log("===>", this.props.redRegions)
     }
 
     componentDidMount() {
+        this.getShrimpPrice()
+    }
+
+    getShrimpPrice(val = 34) {
+        // return () => {
+
+
+            let params = {
+                search: '',
+                with: 'creator,species,region',
+                sort: 'size_100|creator.name,desc',
+                region_id: val
+            };
+            this.props.dispatch(actGetShrimp(params))
+        // }
+    }
+
+    showModalFilter() {
+        this.setState({
+            isFilterVisible: !this.state.isFilterVisible,
+            data_regions:[]
+        })
+    }
+
+    onFilterChange(e) {
+        console.log(e)
         let params = {
-            search: '',
-            with: 'creator,species,region',
-            sort: 'size_100|creator.name,desc',
-            region_id: 34
-        };
-        this.props.dispatch(actGetShrimp(params))
+            search: e
+        }
+        this.props.dispatch(actGetRegions(params))
+    }
+
+    onFilter(val) {
+        return () => {
+            this.setState({
+                isFilterVisible: !this.state.isFilterVisible
+            })
+            this.getShrimpPrice(val.id)
+            console.log(val.id)
+        }
     }
 
     render() {
@@ -54,7 +107,7 @@ class ScreenHome extends Component {
                 {
                     this.state.isLoading
                         ?
-                        <View>
+                        <View style={{flex: 1, justifyContent: 'center',alignItems: 'center'}}>
                             <Text>Please wait...</Text>
                         </View>
                         :
@@ -63,6 +116,8 @@ class ScreenHome extends Component {
                             <CardView/>
                             <Divider title={'Harga udang di kota terdekat'}/>
                             {
+                                this.state.data.data.length >0
+                                ?
                                 this.state.data.data.map((x, y) => {
                                     return (
                                         <CardView
@@ -74,18 +129,88 @@ class ScreenHome extends Component {
 
                                     )
                                 })
+                                    :
+                                    <View style={{flex:1, justifyContent:'center',alignItems:'center', height:hp('20%')}}>
+                                        <Text>Tidak ada data</Text>
+                                    </View>
                             }
                         </Content>
                 }
                 {
                     !this.state.isLoading
                     &&
-                    <Footer/>
+                    <Footer onFilter={this.showModalFilter}/>
                 }
+                <Modal
+                    onBackdropPress={this.showModalFilter} onBackButtonPress={this.showModalFilter}
+                    isVisible={this.state.isFilterVisible}
+                    style={styles.bottomModal}
+                >
+                    <View style={styles.modalContent}>
+                        <View style={{flexDirection: 'row'}}>
+                            <View style={{flex: 4}}>
+                                <Item regular>
+                                    <Input onChangeText={this.onFilterChange} style={{height: hp('6%')}}
+                                           placeholder='Masukan nama kota'/>
+                                </Item>
+                            </View>
+                            <View style={{flex: 1}}>
+                                <View style={{
+                                    height: hp('6.25%'),
+                                    backgroundColor: '#1976D2',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}>
+                                    <Image
+                                        style={{flex: 1}}
+                                        width={hp('4%')}
+                                        source={require('../../Assets/musica-searcher.png')}
+                                        resizeMode={"contain"}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                        <View style={{paddingBottom: 10}}>
+                            <ScrollView>
+                                {
+                                    this.state.data_regions.length > 0
+                                        ?
+                                        this.state.data_regions.map((x, y) => {
+                                            return (
+                                                <TouchableOpacity key={y} onPress={this.onFilter(x)}>
+                                                    <View style={{height: hp('5%'), justifyContent: 'center'}}>
+                                                        <Text style={{fontSize: hp('1.9%')}}>{x.full_name}</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            )
+                                        })
+                                        :
+                                        <View style={{justifyContent:'center',alignItems:'center', flex:1}}>
+                                        <Text style={{fontSize:hp('2%')}}>Silahkan masukkan nama daerah</Text>
+                                        </View>
+                                }
+                            </ScrollView>
+                        </View>
+                    </View>
+
+                </Modal>
             </Container>
         );
     }
 }
+
+const styles = StyleSheet.create({
+    modalContent: {
+        backgroundColor: "white",
+        padding: 10,
+        borderColor: "rgba(0, 0, 0, 0.1)",
+        height: hp('40%'),
+        flexDirection: 'column'
+    }, bottomModal: {
+        justifyContent: "flex-end",
+        margin: 0
+    },
+})
 
 export default connect(
     mapStateToProps,

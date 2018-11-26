@@ -22,3 +22,26 @@ export function actGetShrimp(params) {
         })
     }
 }
+
+export function actGetRegions(params) {
+    return dispatch => {
+        Api.GET('regions',params)
+            .then((resp)=>{
+                dispatch({
+                    type:'GET_REGIONS',
+                    status_get:true,
+                    data:resp.data.data,
+                    message : 'success'
+                })
+                // console.log(resp)
+            }).catch((err)=>{
+                dispatch({
+                    type : 'GET_REGIONS',
+                    status_get:false,
+                    data : [],
+                    message : 'failed'
+                })
+                // console.log(err.message)
+        })
+    }
+}

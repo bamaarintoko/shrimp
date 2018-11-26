@@ -12,9 +12,11 @@ import thunk from "redux-thunk";
 import SplashScreen from '../Screen/Splash/screen-splash'
 import HomeScreen from '../Screen/Home/screen-home'
 import {redShrimp} from "../Reducers/shrimpReducers";
+import {redRegions} from "../Reducers/regionReducers";
+
 const AppNavigator = createStackNavigator({
     Splash: {screen: SplashScreen},
-    Home:{screen: HomeScreen}
+    Home: {screen: HomeScreen}
 }, {
     headerMode: 'none',
     initialRouteName: 'Home'
@@ -23,7 +25,8 @@ const AppNavigator = createStackNavigator({
 export const navReducer = createNavigationReducer(AppNavigator);
 const appReducer = combineReducers({
     nav: navReducer,
-    redShrimp : redShrimp
+    redShrimp: redShrimp,
+    redRegions: redRegions
 });
 export const middleware = createReactNavigationReduxMiddleware(
     "root",
@@ -32,16 +35,17 @@ export const middleware = createReactNavigationReduxMiddleware(
 const mapStateToProps = (state) => ({
     state: state.nav,
 });
-const App = reduxifyNavigator(AppNavigator,"root");
+const App = reduxifyNavigator(AppNavigator, "root");
 const AppWithNavigationState = connect(mapStateToProps)(App)
 export const store = createStore(
     appReducer,
     applyMiddleware(thunk, middleware),
 );
-class Root extends React.Component{
 
-    render(){
-        return(
+class Root extends React.Component {
+
+    render() {
+        return (
             <AppWithNavigationState/>
         )
     }

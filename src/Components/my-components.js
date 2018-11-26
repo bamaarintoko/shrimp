@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View, Text, Image} from "react-native"
+import {StyleSheet, View, Text, Image, TouchableOpacity} from "react-native"
 import {heightPercentageToDP as hp} from "react-native-responsive-screen";
 
 export const Header = ({title, subTitle}) => {
@@ -25,35 +25,39 @@ export const Header = ({title, subTitle}) => {
     )
 }
 
-export const Footer = () => {
+export const Footer = ({onFilter, onSort}) => {
     return (
         <View style={style.footer}>
-            <View style={style.footerLeft}>
-                <View style={{alignItems: 'center'}}>
-                    <Image
-                        style={{flex: 1}}
-                        width={hp('3%')}
-                        source={require('../Assets/filter-results-button.png')}
-                        resizeMode={"contain"}
-                    />
+            <TouchableOpacity onPress={onFilter} style={style.footerLeft}>
+                <View style={style.footerLeft}>
+                    <View style={{alignItems: 'center'}}>
+                        <Image
+                            style={{flex: 1}}
+                            width={hp('3%')}
+                            source={require('../Assets/filter-results-button.png')}
+                            resizeMode={"contain"}
+                        />
+                    </View>
+                    <View style={{margin: 10}}>
+                        <Text style={style.textFooter}>Filter Lokasi</Text>
+                    </View>
                 </View>
-                <View style={{margin: 10}}>
-                    <Text style={style.textFooter}>Filter Lokasi</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onSort} style={style.footerRight}>
+                <View style={style.footerRight}>
+                    <View style={{alignItems: 'center'}}>
+                        <Image
+                            style={{flex: 1}}
+                            width={hp('3%')}
+                            source={require('../Assets/sort-down.png')}
+                            resizeMode={"contain"}
+                        />
+                    </View>
+                    <View style={{margin: 10}}>
+                        <Text style={style.textFooter}>Urutkan</Text>
+                    </View>
                 </View>
-            </View>
-            <View style={style.footerRight}>
-                <View style={{alignItems: 'center'}}>
-                    <Image
-                        style={{flex: 1}}
-                        width={hp('3%')}
-                        source={require('../Assets/sort-down.png')}
-                        resizeMode={"contain"}
-                    />
-                </View>
-                <View style={{margin: 10}}>
-                    <Text style={style.textFooter}>Urutkan</Text>
-                </View>
-            </View>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -84,7 +88,7 @@ export const CardView = ({price, location, date, createby}) => {
                         style={{fontSize: hp('1.8%')}}>{date === undefined ? 'date' : date} oleh {createby === undefined ? 'xxx' : createby}</Text>
                 </View>
                 <View style={{flex: 1}}>
-                    <Text style={{fontSize:hp('1.8%')}}>Harga lengkap ></Text>
+                    <Text style={{fontSize: hp('1.8%')}}>Harga lengkap ></Text>
                 </View>
             </View>
         </View>
