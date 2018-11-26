@@ -1,12 +1,19 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Container, Content, View, Text} from 'native-base';
-import {StyleSheet} from 'react-native'
+import {StyleSheet, Dimensions} from 'react-native'
 import {Header} from "../../Components/my-components";
 import {heightPercentageToDP as hp} from "react-native-responsive-screen";
 import {actGetDetail} from "./action";
 import {number} from "../../Utils/func";
-
+import {
+    LineChart,
+    BarChart,
+    PieChart,
+    ProgressChart,
+    ContributionGraph
+} from 'react-native-chart-kit'
+import {NavigationActions} from "react-navigation";
 function mapStateToProps(state) {
     return {
         redDetailShrimp: state.redDetailShrimp
@@ -38,7 +45,7 @@ class ScreenDetail extends Component {
         if (prevState.initialDetailShrimp === this.props.redDetailShrimp.status) {
             this.setState({
                 data: this.props.redDetailShrimp.data,
-                loc: this.props.redDetailShrimp.data.date_region_full_name
+                loc: this.props.redDetailShrimp.data.date_region_full_name.split('-')[3].replace(" ","")
             })
             this.props.dispatch({
                 type: 'GET_DETAIL_SHRIMP_RESET'
@@ -53,12 +60,12 @@ class ScreenDetail extends Component {
         // console.log(this.state.loc.split('-')[3].replace(" ",""))
         return (
             <Container>
-                <Header/>
+                <Header onLeftPress={()=>this.props.dispatch(NavigationActions.back())} left={'-'} title={'Detail Harga Udang'}/>
                 <Content>
                     <View style={styles.vwDivider}/>
                     <View style={{height: hp('10%'), justifyContent:'center',paddingLeft:15}}>
                         <Text style={{fontSize: hp('2%')}}>Species</Text>
-                        <Text style={{fontSize: hp('1.9%'), color:'#1976D2'}}>{this.state.loc.split('-')[3].replace(" ","")}</Text>
+                        <Text style={{fontSize: hp('1.9%'), color:'#1976D2'}}>{this.state.loc}</Text>
                     </View>
                     <View style={styles.vwDivider}/>
                     <View style={styles.listPrice}>
@@ -119,8 +126,54 @@ class ScreenDetail extends Component {
                         <View style={styles.vwTitleGrafik}>
                             <Text style={{fontSize: hp('2%')}}>Perkembangan harga (ukuran 100)</Text>
                         </View>
+                        <LineChart
+                            data={{
+                                labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+                                datasets: [{
+                                    data: [
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100,
+                                        Math.random() * 100
+                                    ]
+                                }]
+                            }}
+                            width={Dimensions.get('window').width} // from react-native
+                            height={hp('30%')}
+                            chartConfig={{
+                                backgroundColor: '#FFF',
+                                backgroundGradientFrom: '#FFF',
+                                backgroundGradientTo: '#FFF',
+                                decimalPlaces: 2, // optional, defaults to 2dp
+                                color: (opacity = 1) => `rgba(25, 118, 210, ${opacity})`,
+                            }}
+                            bezier
+                            style={{
+                                marginVertical: 10,
+                                borderRadius: 16
+                            }}
+                        />
                     </View>
                     <View style={styles.vwDivider}/>
+                    <View style={styles.vwCatatan}>
+                        <Text style={styles.textCatatan}>
+                            Catatan :
+                        </Text>
+                        <Text style={styles.textSubCatatan}>
+                            Harga diatas bisa berubah sewaktu-waktu
+                        </Text>
+                    </View>
+                    <View style={styles.vwDivider}/>
+                    <View style={styles.vwCatatan}>
+                        <Text style={styles.textCatatan}>
+                            Diedit pada :
+                        </Text>
+                        <Text style={styles.textSubCatatan}>
+                            -
+                        </Text>
+                    </View>
                 </Content>
             </Container>
         );
@@ -151,12 +204,25 @@ const styles = StyleSheet.create({
         backgroundColor: '#E0E0E0', height: hp('1.6%')
     },
     vwGrafik: {
-        height: hp('30%')
+        height: hp('40%')
     },
     vwTitleGrafik: {
         height: hp('6%'),
         paddingLeft: 15,
         justifyContent: 'center'
+    },
+    vwCatatan : {
+        paddingLeft:15,
+        height:hp('10%'),
+        justifyContent:'center'
+    },
+    textCatatan:{
+        fontSize : hp('2%'),
+        color: '#E0E0E0'
+
+    },
+    textSubCatatan:{
+        fontSize : hp('2%')
     }
 })
 export default connect(
