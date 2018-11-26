@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {Platform, YellowBox, Text, View} from 'react-native';
 import AppWithNavigationState from './src/Navigator/AppNavigator'
 import {store} from './src/Navigator/AppNavigator'
 import {Provider} from "react-redux";
@@ -17,7 +17,7 @@ const instructions = Platform.select({
         'Double tap R on your keyboard to reload,\n' +
         'Shake or press menu button for dev menu',
 });
-
+YellowBox.ignoreWarnings(['Remote debugger']);
 type Props = {};
 export default class App extends Component<Props> {
     render() {

@@ -1,5 +1,5 @@
 import React from 'react'
-import {createStackNavigator} from "react-navigation";
+import {createStackNavigator, NavigationActions} from "react-navigation";
 import {
     createNavigationReducer,
     createReactNavigationReduxMiddleware,
@@ -8,15 +8,18 @@ import {
 import {connect} from "react-redux";
 import {applyMiddleware, combineReducers, createStore} from "redux";
 import thunk from "redux-thunk";
+import {BackHandler} from 'react-native'
 //SCREEN
 import SplashScreen from '../Screen/Splash/screen-splash'
 import HomeScreen from '../Screen/Home/screen-home'
-import {redShrimp} from "../Reducers/shrimpReducers";
+import DetailScreen from '../Screen/Home/screen-detail'
+import {redShrimp, redDetailShrimp} from "../Reducers/shrimpReducers";
 import {redRegions} from "../Reducers/regionReducers";
 
 const AppNavigator = createStackNavigator({
     Splash: {screen: SplashScreen},
-    Home: {screen: HomeScreen}
+    Home: {screen: HomeScreen},
+    Detail: {screen: DetailScreen}
 }, {
     headerMode: 'none',
     initialRouteName: 'Home'
@@ -26,7 +29,8 @@ export const navReducer = createNavigationReducer(AppNavigator);
 const appReducer = combineReducers({
     nav: navReducer,
     redShrimp: redShrimp,
-    redRegions: redRegions
+    redRegions: redRegions,
+    redDetailShrimp: redDetailShrimp
 });
 export const middleware = createReactNavigationReduxMiddleware(
     "root",
@@ -43,6 +47,23 @@ export const store = createStore(
 );
 
 class Root extends React.Component {
+    componentDidMount() {
+        BackHandler.addEventListener('hardwareBackPress', function () {
+            const {state} = this.props;
+            console.log(this.props)
+            if (state.index === 0) {
+
+                BackHandler.exitApp()
+                return false;
+            }
+            this.props.dispatch(NavigationActions.back());
+            return true;
+        }.bind(this));
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress');
+    }
 
     render() {
         return (

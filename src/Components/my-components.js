@@ -62,7 +62,7 @@ export const Footer = ({onFilter, onSort}) => {
     )
 }
 
-export const CardView = ({price, location, date, createby}) => {
+export const CardView = ({price, location, date, createby,detail}) => {
     return (
         <View style={style.card}>
             <View style={{flexDirection: 'row', flex: 1}}>
@@ -87,9 +87,11 @@ export const CardView = ({price, location, date, createby}) => {
                     <Text
                         style={{fontSize: hp('1.8%')}}>{date === undefined ? 'date' : date} oleh {createby === undefined ? 'xxx' : createby}</Text>
                 </View>
-                <View style={{flex: 1}}>
-                    <Text style={{fontSize: hp('1.8%')}}>Harga lengkap ></Text>
-                </View>
+                <TouchableOpacity style={{flex: 1}} onPress={detail}>
+                    <View style={{flex: 1}}>
+                        <Text style={{fontSize: hp('1.8%')}}>Harga lengkap ></Text>
+                    </View>
+                </TouchableOpacity>
             </View>
         </View>
     )
@@ -166,7 +168,7 @@ const style = StyleSheet.create({
         height: hp('17%'),
         padding: 10,
         borderBottomColor: '#BDBDBD',
-        borderBottomWidth: 1,
+        borderBottomWidth: 0.5,
         flexDirection: 'column'
     },
     cardTextHarga: {

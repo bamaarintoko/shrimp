@@ -31,6 +31,7 @@ class ScreenHome extends Component {
         this.showModalFilter = this.showModalFilter.bind(this)
         this.onFilterChange = this.onFilterChange.bind(this)
         this.onFilter = this.onFilter.bind(this)
+        this.goToDetail = this.goToDetail.bind(this)
     }
 
 
@@ -53,7 +54,7 @@ class ScreenHome extends Component {
                 type: 'GET_REGIONS_RESET'
             })
         }
-        console.log("===>", this.props.redRegions)
+        // console.log("===>", this.props.redRegions)
     }
 
     componentDidMount() {
@@ -64,25 +65,25 @@ class ScreenHome extends Component {
         // return () => {
 
 
-            let params = {
-                search: '',
-                with: 'creator,species,region',
-                sort: 'size_100|creator.name,desc',
-                region_id: val
-            };
-            this.props.dispatch(actGetShrimp(params))
+        let params = {
+            search: '',
+            with: 'creator,species,region',
+            sort: 'size_100|creator.name,desc',
+            region_id: val
+        };
+        this.props.dispatch(actGetShrimp(params))
         // }
     }
 
     showModalFilter() {
         this.setState({
             isFilterVisible: !this.state.isFilterVisible,
-            data_regions:[]
+            data_regions: []
         })
     }
 
     onFilterChange(e) {
-        console.log(e)
+        // console.log(e)
         let params = {
             search: e
         }
@@ -95,19 +96,26 @@ class ScreenHome extends Component {
                 isFilterVisible: !this.state.isFilterVisible
             })
             this.getShrimpPrice(val.id)
-            console.log(val.id)
+            // console.log(val.id)
+        }
+    }
+
+    goToDetail(val) {
+        return () => {
+            // console.log(val)
+            this.props.navigation.navigate('Detail', {id: val})
         }
     }
 
     render() {
-        console.log(this.state.data)
+        // console.log(this.state.data)
         return (
             <Container>
                 <Header title={'Harga Udang'} subTitle={'Ukuran 100'}/>
                 {
                     this.state.isLoading
                         ?
-                        <View style={{flex: 1, justifyContent: 'center',alignItems: 'center'}}>
+                        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
                             <Text>Please wait...</Text>
                         </View>
                         :
@@ -116,21 +124,27 @@ class ScreenHome extends Component {
                             <CardView/>
                             <Divider title={'Harga udang di kota terdekat'}/>
                             {
-                                this.state.data.data.length >0
-                                ?
-                                this.state.data.data.map((x, y) => {
-                                    return (
-                                        <CardView
-                                            date={x.creator.created_at}
-                                            createby={x.creator.name}
-                                            location={x.region.full_name}
-                                            price={number(x.size_100)}
-                                            key={y}/>
+                                this.state.data.data.length > 0
+                                    ?
+                                    this.state.data.data.map((x, y) => {
+                                        return (
+                                            <CardView
+                                                detail={this.goToDetail(x.id)}
+                                                date={x.creator.created_at}
+                                                createby={x.creator.name}
+                                                location={x.region.full_name}
+                                                price={number(x.size_100)}
+                                                key={y}/>
 
-                                    )
-                                })
+                                        )
+                                    })
                                     :
-                                    <View style={{flex:1, justifyContent:'center',alignItems:'center', height:hp('20%')}}>
+                                    <View style={{
+                                        flex: 1,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        height: hp('20%')
+                                    }}>
                                         <Text>Tidak ada data</Text>
                                     </View>
                             }
@@ -185,8 +199,8 @@ class ScreenHome extends Component {
                                             )
                                         })
                                         :
-                                        <View style={{justifyContent:'center',alignItems:'center', flex:1}}>
-                                        <Text style={{fontSize:hp('2%')}}>Silahkan masukkan nama daerah</Text>
+                                        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+                                            <Text style={{fontSize: hp('2%')}}>Silahkan masukkan nama daerah</Text>
                                         </View>
                                 }
                             </ScrollView>
